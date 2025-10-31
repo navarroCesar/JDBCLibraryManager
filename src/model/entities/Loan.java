@@ -11,18 +11,18 @@ public class Loan implements Serializable {
 	private Integer id;
 	private User user;
 	private Book book;
-	private Date borrowDAte;
+	private Date borrowDate;
 	private Date returnDate;
 
 	public Loan() {
 
 	}
 
-	public Loan(Integer id, User user, Book book, Date borrowDAte, Date returnDate) {
+	public Loan(Integer id, User user, Book book, Date borrowDate, Date returnDate) {
 		this.id = id;
 		this.user = user;
 		this.book = book;
-		this.borrowDAte = borrowDAte;
+		this.borrowDate = borrowDate;
 		this.returnDate = returnDate;
 	}
 
@@ -50,12 +50,12 @@ public class Loan implements Serializable {
 		this.book = book;
 	}
 
-	public Date getBorrowDAte() {
-		return borrowDAte;
+	public Date getBorrowDate() {
+		return borrowDate;
 	}
 
-	public void setBorrowDAte(Date borrowDAte) {
-		this.borrowDAte = borrowDAte;
+	public void setBorrowDate(Date borrowDAte) {
+		this.borrowDate = borrowDAte;
 	}
 
 	public Date getReturnDate() {
@@ -85,7 +85,7 @@ public class Loan implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Loan [id=" + id + ", user=" + user + ", book=" + book + ", borrowDAte=" + borrowDAte + ", returnDate="
+		return "Loan [id=" + id + ", user=" + user + ", book=" + book + ", borrowDAte=" + borrowDate + ", returnDate="
 				+ returnDate + "]";
 	}
 
