@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -60,20 +63,149 @@ public class LoanDaoJDBC implements LoanDao {
 
 	@Override
 	public List<Loan> findByUser(User u) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("SELECT " + "l.id AS loan_id, " + "l.borrow_date AS loan_borrow_date, "
+					+ "l.return_date AS loan_return_date, " + "u.id AS user_id, " + "u.name AS user_name, "
+					+ "u.email AS user_email, " + "b.id AS book_id, " + "b.title AS book_title, "
+					+ "a.id AS author_id, " + "a.name AS author_name " + "FROM loan l "
+					+ "INNER JOIN user u ON l.user_id = u.id " + "INNER JOIN book b ON l.book_id = b.id "
+					+ "INNER JOIN author a ON b.author_id = a.id " + "WHERE u.id = ? " + "ORDER BY l.borrow_date DESC");
+			st.setInt(1, u.getId());
+			rs = st.executeQuery();
+
+			List<Loan> list = new ArrayList<>();
+			Map<Integer, User> userMap = new HashMap<>();
+			Map<Integer, Book> bookMap = new HashMap<>();
+
+			while (rs.next()) {
+				User user = userMap.get(rs.getInt("user_id"));
+				if (user == null) {
+					user = instantiateUser(rs);
+					userMap.put(rs.getInt("user_id"), user);
+				}
+
+				Author author = new Author();
+				author.setId(rs.getInt("author_id"));
+				author.setName(rs.getString("author_name"));
+
+				Book book = bookMap.get(rs.getInt("book_id"));
+				if (book == null) {
+					book = instantiateBook(rs, author);
+					bookMap.put(rs.getInt("book_id"), book);
+				}
+
+				Loan loan = instantiateLoan(rs, user, book);
+				list.add(loan);
+			}
+
+			return list;
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 
 	@Override
 	public List<Loan> findByBook(Book b) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("SELECT " + "l.id AS loan_id, " + "l.borrow_date AS loan_borrow_date, "
+					+ "l.return_date AS loan_return_date, " + "u.id AS user_id, " + "u.name AS user_name, "
+					+ "u.email AS user_email, " + "b.id AS book_id, " + "b.title AS book_title, "
+					+ "a.id AS author_id, " + "a.name AS author_name " + "FROM loan l "
+					+ "INNER JOIN user u ON l.user_id = u.id " + "INNER JOIN book b ON l.book_id = b.id "
+					+ "INNER JOIN author a ON b.author_id = a.id " + "WHERE b.id = ? " + "ORDER BY l.borrow_date DESC");
+			st.setInt(1, b.getId());
+			rs = st.executeQuery();
+
+			List<Loan> list = new ArrayList<>();
+			Map<Integer, User> userMap = new HashMap<>();
+			Map<Integer, Book> bookMap = new HashMap<>();
+
+			while (rs.next()) {
+				User user = userMap.get(rs.getInt("user_id"));
+				if (user == null) {
+					user = instantiateUser(rs);
+					userMap.put(rs.getInt("user_id"), user);
+				}
+
+				Author author = new Author();
+				author.setId(rs.getInt("author_id"));
+				author.setName(rs.getString("author_name"));
+
+				Book book = bookMap.get(rs.getInt("book_id"));
+				if (book == null) {
+					book = instantiateBook(rs, author);
+					bookMap.put(rs.getInt("book_id"), book);
+				}
+
+				Loan loan = instantiateLoan(rs, user, book);
+				list.add(loan);
+			}
+
+			return list;
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 
 	@Override
 	public List<Loan> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("SELECT " + "l.id AS loan_id, " + "l.borrow_date AS loan_borrow_date, "
+					+ "l.return_date AS loan_return_date, " + "u.id AS user_id, " + "u.name AS user_name, "
+					+ "u.email AS user_email, " + "b.id AS book_id, " + "b.title AS book_title, "
+					+ "a.id AS author_id, " + "a.name AS author_name " + "FROM loan l "
+					+ "INNER JOIN user u ON l.user_id = u.id " + "INNER JOIN book b ON l.book_id = b.id "
+					+ "INNER JOIN author a ON b.author_id = a.id " + "ORDER BY l.borrow_date DESC");
+
+			rs = st.executeQuery();
+
+			List<Loan> list = new ArrayList<>();
+			Map<Integer, User> userMap = new HashMap<>();
+			Map<Integer, Book> bookMap = new HashMap<>();
+
+			while (rs.next()) {
+				User user = userMap.get(rs.getInt("user_id"));
+				if (user == null) {
+					user = instantiateUser(rs);
+					userMap.put(rs.getInt("user_id"), user);
+				}
+
+				Author author = new Author();
+				author.setId(rs.getInt("author_id"));
+				author.setName(rs.getString("author_name"));
+
+				Book book = bookMap.get(rs.getInt("book_id"));
+				if (book == null) {
+					book = instantiateBook(rs, author);
+					bookMap.put(rs.getInt("book_id"), book);
+				}
+
+				Loan loan = instantiateLoan(rs, user, book);
+				list.add(loan);
+			}
+
+			return list;
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 
 	@Override
